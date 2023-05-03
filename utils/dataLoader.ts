@@ -1,5 +1,5 @@
+import { readFile } from 'node:fs/promises';
 import { Document } from 'langchain/document';
-import { readFile } from 'fs/promises';
 import { BaseDocumentLoader } from 'langchain/document_loaders';
 
 export abstract class BufferLoader extends BaseDocumentLoader {
@@ -44,6 +44,28 @@ export class CustomPDFLoader extends BufferLoader {
         },
       }),
     ];
+  }
+}
+
+export class CustomHTMLLoader extends BufferLoader {
+  public async load(): Promise<Document[]> {
+    if (typeof this.filePathOrBlob !== `string`) {
+      throw new Error(`Expected HTML as string!`);
+    }
+
+    const parsed = await readFile(this.filePathOrBlob, { encoding: `utf-8` });
+    const metadata = { source: this.filePathOrBlob };
+
+    return [
+      new Document({
+        pageContent: parsed,
+        metadata,
+      }),
+    ];
+  }
+
+  public async parse(): Promise<Document[]> {
+    return [];
   }
 }
 

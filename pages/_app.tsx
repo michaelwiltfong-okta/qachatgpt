@@ -1,3 +1,6 @@
+// * Polyfill's the web fetch API to work in Node
+import 'isomorphic-fetch';
+
 import '@/styles/base.css';
 import type { AppProps } from 'next/app';
 import { Inter } from 'next/font/google';
